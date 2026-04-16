@@ -29,7 +29,7 @@ jobs:
           runtime_name="$(grep 'base:' io.wowup.WowUp.yml | awk '{print $2}')"
           runtime_version="$(grep 'base-version:' io.wowup.WowUp.yml | awk '{print $2}')"
           flatpak remote-add --user --if-not-exists flathub https://dl.flathub.org/repo/flathub.flatpakrepo
-          flatpak install --user --noninteractive flathub "${runtime_name}/x86_64/${runtime_version//'/}"
+          flatpak install --user --noninteractive flathub "${runtime_name}/x86_64/${runtime_version//\'/}"
 
       - name: Build
         uses: andyholmes/flatter@main
