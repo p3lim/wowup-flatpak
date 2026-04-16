@@ -6,15 +6,15 @@ This repo will be maintained until the WowUp team launches their own official Fl
 
 ## Installation
 
-*1. Add the repository*
+**1. Add the repository**
 
 	flatpak remote-add --if-not-exists wowup https://p3lim.github.io/wowup-flatpak/index.flatpakrepo
 
-*2. Install*
+**2. Install**
 
 	flatpak install wowup io.wowup.WowUp
 
-*3. Run*
+**3. Run**
 
 	flatpak run io.wowup.WowUp
 
