@@ -1,0 +1,58 @@
+name: Update
+
+on:
+  schedule:
+    - cron: '0 6 * * *'
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Compare versions
+        id: version
+        run: |
+          # get latest release tag name from WowUp
+          latest=$(gh release view --repo WowUp/WowUp.CF --json tagName --jq '.tagName)'
+
+          # fetch our latest tags
+          git fetch --tags
+
+          # get our latest tag
+          current_ref=$(git rev-list --tags --max-count=1)
+          current=$(git describe --tags $current_ref)
+
+          # bail if our latest tag matches theirs
+          if [[ "$current" = "$latest" ]]; then
+            gh run cancel ${{ github.run_id }}
+          else
+            echo "version=$latest" >> $GITHUB_OUTPUT
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update manifest
+        run: |
+          # get release asset info
+          asset=$(gh release view --repo WowUp/WowUp.CF --json assets --jq '.[] | .[] | select(.name | endswith(".AppImage"))')
+          asset_url=$(jq -r '.url' <<< "$asset")
+          asset_hash=$(jq -r '.digest' <<< "$asset")
+
+          # update manifest
+          sed -i "s/url: .*/url: $asset_url/" io.wowup.WowUp.yml
+          sed -i "s/sha256: .*/sha256: ${asset_hash#sha256:}/" io.wowup.WowUp.yml
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create pull request
+        uses: peter-evans/create-pull-request@v8
+        with:
+          title: ${{ steps.version.outputs.version }}
+          body: |
+            <https://github.com/WowUp/WowUp-CF/releases/tag/${{ steps.version.outputs.version }}>
+          commit-message: Update to ${{ steps.version.outputs.version }}
+          branch: update-version
+          delete-branch: true

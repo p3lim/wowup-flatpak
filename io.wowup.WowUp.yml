@@ -1,0 +1,83 @@
+id: io.wowup.WowUp
+
+sdk: org.freedesktop.Sdk
+runtime: org.freedesktop.Platform
+runtime-version: '25.08'
+base: org.electronjs.Electron2.BaseApp
+base-version: '25.08'
+
+command: start-wowup
+separate-locales: false # this is provided by the AppImage and handled internally by the app
+
+finish-args:
+  # network access
+  - --share=network
+  # hardware acceleration
+  - --device=dri
+  # electron requirements (X11 + XShm)
+  - --socket=x11
+  - --share=ipc
+  # tray icon support
+  - --talk-name=org.kde.StatusNotifierWatcher
+  # typical locations of game installations
+  - --filesystem=~/.wine
+  - --filesystem=~/Games # lutris
+  - --filesystem=~/.var/app/net.lutris.Lutris/data/lutris
+  - --filesystem=~/.var/app/com.usebottles.bottles/data/bottles
+  - --filesystem=~/.var/app/heroicgameslauncher.hgl/data
+  - --filesystem=~/.steam
+  - --filesystem=~/.var/app/com.valvesoftware.Steam/data
+  - --filesystem=~/.PlayOnLinux
+  - --filesystem=~/.var/app/com.playonlinux.PlayOnLinux4/data
+
+modules:
+  - name: WowUp
+    buildsystem: simple
+    build-commands:
+      # unpack AppImage
+      - chmod +x WowUp.AppImage
+      - ./WowUp.AppImage --appimage-extract
+      # update desktop file to run wrapper script and update icon path
+      - |
+        desktop-file-edit --set-key=Exec --set-value="start-wowup %U" \
+          --set-icon=$FLATPAK_ID squashfs-root/wowup-cf.desktop
+      # install desktop file
+      - |
+        install -D squashfs-root/wowup-cf.desktop \
+          "${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop"
+      # install icons
+      # TODO: missing 64x64
+      - |
+        for size in 16 32 48 128 256 512; do
+          install -D "squashfs-root/usr/share/icons/hicolor/${size}x${size}/apps/wowup-cf.png" \
+            "${FLATPAK_DEST}/share/icons/hicolor/${size}x${size}/apps/${FLATPAK_ID}.png"
+        done
+      # fix desktop file keywords (this should be fixed in the AppImage in the future)
+      - |
+        desktop-file-edit --set-key=Keywords --set-value="addons" \
+          "${FLATPAK_DEST}/share/applications/${FLATPAK_ID}.desktop"
+      # copy metadata file
+      - install -D "${FLATPAK_ID}.metainfo.xml" -t "${FLATPAK_DEST}/share/metainfo/"
+      # install wrapper script
+      - install -Dm755 start-wowup "${FLATPAK_DEST}/bin/start-wowup"
+      # copy rest of the source
+      - mv squashfs-root "${FLATPAK_DEST}/bin/wowup"
+    sources:
+      # app source
+      - type: file
+        dest-filename: WowUp.AppImage
+        url: https://github.com/WowUp/WowUp.CF/releases/download/v2.20.0/WowUp-CF-2.20.0.AppImage
+        sha256: 16ed05a9e5898a9d1c5d289fbb540392dbbbdd2b311a990453772e61b1608717
+        only-arches:
+          - x86_64
+      # wrapper script
+      - type: script
+        dest-filename: start-wowup
+        commands:
+          - zypak-wrapper /app/bin/wowup/wowup-cf "$@"
+      # metadata
+      - type: file
+        path: io.wowup.WowUp.metainfo.xml
+      # externally provided icons (these should be provided by the AppImage in the future)
+      - type: dir
+        path: icons

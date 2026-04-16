@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<component type="desktop-application">
+  <id>io.wowup.WowUp</id>
+  <name>WowUp</name>
+  <launchable type="desktop-id">io.wowup.WowUp.desktop</launchable>
+  <developer id="io.wowup">
+    <name>The WowUp Team</name>
+  </developer>
+  <project_license>GPL-3.0</project_license>
+  <metadata_license>CC0-1.0</metadata_license>
+  <url type="homepage">https://wowup.io/</url>
+  <url type="contact">https://github.com/WowUp/WowUp.CF/issues</url>
+  <summary>World of Warcraft AddOn Manager</summary>
+  <description>
+    <p>Organize your addons your way, simple display of the information you need.</p>
+    <p>Note: if the game is installed to a non-standard path, let WowUp access it:</p>
+    <p><code>flatpak override --filesystem=/path/to/your/wow io.wowup.WowUp</code></p>
+  </description>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://cdn.wowup.io/site/production/assets/images/landing-lg-2-6.png</image>
+    </screenshot>
+  </screenshots>
+  <categories>
+    <category>Network</category>
+    <category>Utility</category>
+  </categories>
+  <requires>
+    <internet>always</internet>
+  </requires>
+  <recommends>
+    <control>pointing</control>
+    <control>keyboard</control>
+    <display_length compare="ge">768</display_length>
+  </recommends>
+  <content_rating type="oars-1.1">
+    <content_attribute id="social-info">moderate</content_attribute>
+    <content_attribute id="money-advertising">mild</content_attribute>
+  </content_rating>
+</component>
