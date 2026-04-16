@@ -1,11 +1,11 @@
 name: Tag
 
 on:
-  push:
+  pull_request:
+    types:
+      - closed
     branches:
       - master
-    paths:
-      - io.wowup.WowUp.yml
 
 permissions:
   contents: write # needed to run `git push`
@@ -14,14 +14,15 @@ permissions:
 jobs:
   tag:
     runs-on: ubuntu-latest
+    if: github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'update-version'
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Get tag from latest commit
+      - name: Get tag from PR name
         id: version
         run: |
-          echo "version=$(git log -1 --pretty=%B)" >> $GITHUB_OUTPUT
+          echo "version=${{ github.event.pull_request.title }}" >> $GITHUB_OUTPUT
 
       - name: Setup Git
         run: |
