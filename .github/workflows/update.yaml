@@ -42,8 +42,8 @@ jobs:
           asset_hash=$(jq -r '.digest' <<< "$asset")
 
           # update manifest
-          sed -i "s/url: .*/url: $asset_url/" io.wowup.WowUp.yml
-          sed -i "s/sha256: .*/sha256: ${asset_hash#sha256:}/" io.wowup.WowUp.yml
+          sed -i "s|url: .*|url: $asset_url|" io.wowup.WowUp.yml
+          sed -i "s|sha256: .*|sha256: ${asset_hash#sha256:}|" io.wowup.WowUp.yml
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
