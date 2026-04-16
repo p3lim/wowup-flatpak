@@ -29,16 +29,14 @@ jobs:
           current_ref=$(git rev-list --tags --max-count=1)
           current=$(git describe --tags $current_ref)
 
-          # bail if our latest tag matches theirs
-          if [[ "$current" = "$latest" ]]; then
-            gh run cancel ${{ github.run_id }}
-          else
+          if [[ "$current" != "$latest" ]]; then
             echo "version=$latest" >> $GITHUB_OUTPUT
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Update manifest
+        if: steps.version.outputs.version != ''
         run: |
           # get release asset info
           asset=$(gh release view --repo WowUp/WowUp.CF --json assets --jq '.[] | .[] | select(.name | endswith(".AppImage"))')
@@ -52,6 +50,7 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create pull request
+        if: steps.version.outputs.version != ''
         uses: peter-evans/create-pull-request@v8
         with:
           title: ${{ steps.version.outputs.version }}
