@@ -48,9 +48,11 @@ modules:
       # install icons
       # TODO: missing 64x64
       - |
-        for size in 16 32 48 128 256 512; do
-          install -D "squashfs-root/usr/share/icons/hicolor/${size}x${size}/apps/wowup-cf.png" \
-            "${FLATPAK_DEST}/share/icons/hicolor/${size}x${size}/apps/${FLATPAK_ID}.png"
+        for size in 16 32 48 64 128 256 512; do
+          if [ -d "squashfs-root/usr/share/icons/hicolor/${size}x${size}" ]; then
+            install -D "squashfs-root/usr/share/icons/hicolor/${size}x${size}/apps/wowup-cf.png" \
+              "${FLATPAK_DEST}/share/icons/hicolor/${size}x${size}/apps/${FLATPAK_ID}.png"
+          fi
         done
       # fix desktop file keywords (this should be fixed in the AppImage in the future)
       - |
