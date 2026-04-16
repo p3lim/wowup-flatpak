@@ -56,7 +56,7 @@ jobs:
         with:
           title: ${{ steps.version.outputs.version }}
           body: |
-            <https://github.com/WowUp/WowUp-CF/releases/tag/${{ steps.version.outputs.version }}>
+            <https://github.com/WowUp/WowUp.CF/releases/tag/${{ steps.version.outputs.version }}>
           commit-message: Update to ${{ steps.version.outputs.version }}
           branch: update-version
           delete-branch: true
