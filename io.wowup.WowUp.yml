@@ -78,6 +78,3 @@ modules:
       # metadata
       - type: file
         path: io.wowup.WowUp.metainfo.xml
-      # externally provided icons (these should be provided by the AppImage in the future)
-      - type: dir
-        path: icons
