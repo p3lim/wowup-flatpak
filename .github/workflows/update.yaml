@@ -15,15 +15,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v6
+        with:
+          fetch-tags: true
 
       - name: Compare versions
         id: version
         run: |
           # get latest release tag name from WowUp
           latest=$(gh release view --repo WowUp/WowUp.CF --json tagName --jq '.tagName')
-
-          # fetch our latest tags
-          git fetch --tags
 
           # get our latest tag
           current_ref=$(git rev-list --tags --max-count=1)
