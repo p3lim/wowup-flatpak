@@ -16,7 +16,7 @@ jobs:
         id: version
         run: |
           # get latest release tag name from WowUp
-          latest=$(gh release view --repo WowUp/WowUp.CF --json tagName --jq '.tagName)'
+          latest=$(gh release view --repo WowUp/WowUp.CF --json tagName --jq '.tagName')
 
           # fetch our latest tags
           git fetch --tags
