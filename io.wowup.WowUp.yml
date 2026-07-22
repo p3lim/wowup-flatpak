@@ -15,7 +15,8 @@ finish-args:
   # hardware acceleration
   - --device=dri
   # electron requirements (X11 + XShm)
-  - --socket=x11
+  - --socket=wayland
+  - --socket=fallback-x11
   - --share=ipc
   # tray icon support
   - --talk-name=org.kde.StatusNotifierWatcher
