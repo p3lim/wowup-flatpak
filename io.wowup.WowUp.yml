@@ -69,8 +69,8 @@ modules:
       # app source
       - type: file
         dest-filename: WowUp.AppImage
-        url: https://github.com/WowUp/WowUp.CF/releases/download/v2.23.1/WowUp-CF-2.23.1.AppImage
-        sha256: 8d74c8fd24af4904dfd47b608ea6f4c55d578fd9dd70ad176b81f7edf139c7d9
+        url: https://github.com/WowUp/WowUp.CF/releases/download/v2.24.0/WowUp-CF-2.24.0.AppImage
+        sha256: 69a479f1750103bf093e4f2db030fa03e80060991e2479721e261c443f29b420
         only-arches:
           - x86_64
       # wrapper script
